@@ -20,7 +20,7 @@ class ProductsShimmer extends StatelessWidget {
         itemCount: 10,
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
-            baseColor: Color.fromARGB(255, 227, 236, 236),
+            baseColor: const Color.fromARGB(255, 227, 236, 236),
             highlightColor: Colors.blueGrey,
             child: Container(
               decoration: BoxDecoration(
@@ -29,11 +29,11 @@ class ProductsShimmer extends StatelessWidget {
                   boxShadow: const [
                     BoxShadow(color: Colors.grey, blurRadius: 2)
                   ]),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(left: 10),
                     child: Align(
                         alignment: Alignment.centerLeft, child: Text("title")),
                   ),
@@ -42,7 +42,7 @@ class ProductsShimmer extends StatelessWidget {
                     width: double.maxFinite,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: EdgeInsets.only(right: 10),
                     child: Align(
                         alignment: Alignment.centerRight, child: Text("price")),
                   )

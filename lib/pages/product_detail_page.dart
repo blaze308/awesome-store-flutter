@@ -4,16 +4,16 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 
 import 'package:awesomestore/api/product_api.dart';
-
-import '../widgets/shimmer.dart';
+import '../widgets/shimmer/products_shimmer.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final String productId;
   final String category;
+  final Product product;
   const ProductDetailPage({
     Key? key,
     required this.productId,
-    required this.category,
+    required this.category, required this.product,
   }) : super(key: key);
 
   @override
@@ -24,15 +24,7 @@ class ProductDetailPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          FutureBuilder(
-            future: ProductsApi().fetchProductDetail(context, productId),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const ProductsShimmer();
-              } else if (snapshot.hasData) {
-                var product = snapshot.data;
-
-                return Wrap(
+          Wrap(
                   children: [
                     SizedBox(
                         width: double.maxFinite,
@@ -42,13 +34,13 @@ class ProductDetailPage extends StatelessWidget {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                product["thumbnail"],
+                                product.thumbnail,
                                 fit: BoxFit.cover,
                               )),
                         )),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, left: 10),
-                      child: Text(product["title"],
+                      child: Text(product.title,
                           maxLines: 3,
                           style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 18)),
@@ -62,7 +54,7 @@ class ProductDetailPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, left: 10),
                             child: Text(
-                              "GHC ${product["price"]}".toString(),
+                              "GHC ${product.price}".toString(),
                               style: const TextStyle(
                                   fontSize: 19,
                                   fontWeight: FontWeight.bold,
@@ -112,17 +104,13 @@ class ProductDetailPage extends StatelessWidget {
                       width: double.maxFinite,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 10, left: 10),
-                        child: Text(product["description"], maxLines: 7),
+                        child: Text(product.description, maxLines: 7),
                       ),
                     ),
                   ],
-                );
-              } else {
-                return const Text("no data");
-              }
-            },
-          ),
-          const Padding(
+        ),
+              
+         const Padding(
             padding: EdgeInsets.only(top: 20, left: 10),
             child: Text("Similar and Related Products "),
           ),
@@ -152,6 +140,7 @@ class ProductDetailPage extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ProductDetailPage(
+                                product: Product.fromMap(product),
                                 category: category,
                                 productId: Product.fromMap(product).id!,
                               ),

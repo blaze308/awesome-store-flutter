@@ -1,9 +1,8 @@
 import 'package:awesomestore/api/product_api.dart';
 import 'package:awesomestore/pages/product_detail_page.dart';
-import 'package:awesomestore/widgets/shimmer.dart';
 import 'package:flutter/material.dart';
-
 import '../models/products.dart';
+import '../widgets/shimmer/products_shimmer.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
@@ -27,31 +26,30 @@ class ProductsPage extends StatelessWidget {
                   return const ProductsShimmer();
                 } else if (snapshot.hasData) {
                   return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          crossAxisSpacing: 15,
-                          childAspectRatio: 2 / 2.8,
-                          mainAxisSpacing: 15,
-                        ),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) => InkWell(
+                      padding: const EdgeInsets.all(10),
+                      child: GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            crossAxisSpacing: 15,
+                            childAspectRatio: 2 / 2.8,
+                            mainAxisSpacing: 15,
+                          ),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            Product product =
+                                Product.fromMap(snapshot.data[index]);
+                            return InkWell(
                               onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ProductDetailPage(
-                                        productId: Product.fromMap(
-                                                snapshot.data[index])
-                                            .id!,
-                                        category: Product.fromMap(
-                                                snapshot.data[index])
-                                            .category,
-                                      ),
+                                          product: product,
+                                          productId: product.id!,
+                                          category: product.category),
                                     ));
                               },
                               child: Container(
@@ -71,10 +69,7 @@ class ProductsPage extends StatelessWidget {
                                       child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            Product.fromMap(
-                                                    snapshot.data[index])
-                                                .title
-                                                .toString(),
+                                            product.title,
                                             maxLines: 1,
                                           )),
                                     ),
@@ -82,8 +77,7 @@ class ProductsPage extends StatelessWidget {
                                       height: 150,
                                       width: double.maxFinite,
                                       child: Image.network(
-                                        Product.fromMap(snapshot.data[index])
-                                            .thumbnail,
+                                        product.thumbnail,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -92,14 +86,14 @@ class ProductsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.centerRight,
                                         child: Text(
-                                            "GHC ${Product.fromMap(snapshot.data[index]).price.toString()}"),
+                                            "GHC ${product.price.toString()}"),
                                       ),
                                     )
                                   ],
                                 ),
                               ),
-                            )),
-                  );
+                            );
+                          }));
                 } else {
                   return const Text("no data");
                 }

@@ -49,7 +49,7 @@ class ProductsApi {
   Future fetchProductCategory(BuildContext context, String category) async {
     try {
       final response = await dio.get(
-        "$url/$category",
+        "$url/category/$category",
         options: Options(
             headers: {"Content-Type": "application/json; charset=UTF-8"}),
       );
